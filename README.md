@@ -13,7 +13,7 @@ For example, item A might cost 50 individually, but this week we have a special 
 In fact the prices are:
 
 | SKU | Unit Price | Special Price |
-|-----|------------|---------------|`
+|-----|------------|---------------|
 | A   | 50         | 3 for 130     |
 | B   | 30         | 2 for 45      |
 | C   | 20         |               |
