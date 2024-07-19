@@ -23,6 +23,10 @@ func TestCheckout(t *testing.T) {
 
 		totalPrice, err := shoppingCheckout.GetTotalPrice()
 
+		if err != nil {
+			t.Fatalf("Unexpected error getting total price: %v", err)
+		}
+
 		if totalPrice != price {
 			t.Fatalf("Expected total price %d got %d", price, totalPrice)
 		}

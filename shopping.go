@@ -39,17 +39,28 @@ func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) {
 	}
 }
 
-// Adds a new item to shopping checkout, 
+// Adds a new item to shopping checkout,
 // returns error if item's price doesn't exist in SKUToPriceMap
 // Example:
-//	item := "A" 	// price for this SKU is 50 (see SetSKUToPriceMapping example)
+//
+//	item := "A" 	// price for this SKU is 50 (see SetSKUToPriceMapping/1 example)
 //	s.Scan(item)
 func (s *ShoppingCheckout) Scan(item string) error {
 	if _, ok := s.SKUToPriceMap[item]; !ok {
 		return fmt.Errorf("item SKU %s not recognised by shop", item)
 	}
-	s.SKUToPriceMap[item]++
+	s.Shopping[item]++
 	return nil
+}
+
+func (s *ShoppingCheckout) GetTotalPrice() (int, error) {
+	totalPrice := 0
+	for item, count := range s.Shopping {
+		price := s.SKUToPriceMap[item] //no need to check if item exists, already checked in Scan/1
+
+		totalPrice += price * count
+	}
+	return totalPrice, nil
 }
 
 // ShoppingCheckout Private Func
