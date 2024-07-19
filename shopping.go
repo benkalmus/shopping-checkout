@@ -1,5 +1,7 @@
 package shopping
 
+import "fmt"
+
 type ShoppingCheckout struct {
 	// map that stores string with a count of items scanned
 	Shopping map[string]int
@@ -23,20 +25,27 @@ func NewShoppingCheckout() *ShoppingCheckout {
 // This is used to calculate final price of shopping
 // Merges item Price map with existing map, note this will override string collisions
 // Example:
+//
 //	itemPrices := map[string]int{
-//		"A": 50, 
-//		"B": 30, 
-//		"C": 20, 
+//		"A": 50,
+//		"B": 30,
+//		"C": 20,
 //		"D": 15
 //	}
-// 	s.SetSKUToPriceMapping(itemPrices)
-func (s *ShoppingCheckout)SetSKUToPriceMapping(itemPriceMap map[string]int) {
+//	s.SetSKUToPriceMapping(itemPrices)
+func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) {
 	for item, price := range itemPriceMap {
 		s.SKUToPriceMap[item] = price
 	}
 }
 
+func (s *ShoppingCheckout) Scan(item string) error {
+	if _, ok := s.SKUToPriceMap[item]; !ok {
+		return fmt.Errorf("item SKU %s not recognised by shop", item)
+	}
+	s.SKUToPriceMap[item]++
+	return nil
+}
 
 // ShoppingCheckout Private Func
 // =======================================================
-
