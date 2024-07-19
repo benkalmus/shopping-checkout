@@ -10,7 +10,7 @@ func TestCheckout(t *testing.T) {
 		shoppingCheckout := NewShoppingCheckout()
 		item := "A"
 		price := 50
-		// shopping checkout requires a map of SKU to prices, this will be required to calculate price
+		// shopping checkout requires a map of string to prices, this will be required to calculate price
 		itemPriceMap := map[string]int{item: price}
 
 		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
