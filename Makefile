@@ -1,18 +1,21 @@
-.PHONY: vet test race build run clean version help
+.PHONY: fmt vet test race build run clean version help
 
 include vsn.mk
 PROJECT_NAME="shopping-checkout"
 
-vet:
+fmt: 
+	go fmt 
+
+vet: fmt
 	go vet
 
-test: 
+test: vet 
 	go test -v
 
-race:
+race: vet
 	go test -race -v *.go
 
-build:
+build: fmt
 	@if [ ! -d bin ]; then mkdir bin; fi
 	go build -o bin/$(PROJECT_NAME)
 
@@ -29,6 +32,7 @@ help:
 	@echo "Usage: make [command]"
 	@echo
 	@echo "Available commands:"
+	@echo "  fmt"
 	@echo "  vet"
 	@echo "  test"
 	@echo "  race"

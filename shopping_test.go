@@ -1,4 +1,4 @@
-package shopping 
+package shopping
 
 import (
 	"testing"
@@ -12,7 +12,7 @@ func TestCheckout(t *testing.T) {
 		price := 50
 		// shopping checkout requires a map of SKU to prices, this will be required to calculate price
 		itemPriceMap := map[string]int{item: price}
-		
+
 		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
 
 		err := shoppingCheckout.Scan(item)
@@ -22,7 +22,7 @@ func TestCheckout(t *testing.T) {
 		}
 
 		totalPrice, err := shoppingCheckout.GetTotalPrice()
-	
+
 		if totalPrice != price {
 			t.Fatalf("Expected total price %d got %d", price, totalPrice)
 		}
