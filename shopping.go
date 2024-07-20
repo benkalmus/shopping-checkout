@@ -74,8 +74,8 @@ func (s *ShoppingCheckout) SetDiscountPriceMapping(itemDiscountMap map[string]Di
 
 		// discount doesn't make sense if it's more than the price of an item
 		nonDiscountPrice := (regularPrice * discount.NumItems)
-		if discount.Price >= nonDiscountPrice {
-			return fmt.Errorf("item %s's discount price cannot be more than regular price %d >= %d", item, discount.Price, nonDiscountPrice)
+		if discount.Price >= nonDiscountPrice || discount.Price < 0 {
+			return fmt.Errorf("item %s's discount price must satisfy 0 <= %d <= %d", item, discount.Price, nonDiscountPrice)
 		}
 
 		// store discount mapping
