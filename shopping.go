@@ -2,12 +2,22 @@ package shopping
 
 import "fmt"
 
+// Type definitions
+// =======================================================
 type ShoppingCheckout struct {
 	// map that stores string with a count of items scanned
 	Shopping map[string]int
 
 	// a mapping for SKUs to a price
 	SKUToPriceMap map[string]int
+
+	// a mapping for SKUs to a Discount
+	SKUToDiscountMap map[string]Discount
+}
+
+type Discount struct {
+	NumItems int
+	Price    int
 }
 
 // ShoppingCheckout Public API
@@ -16,8 +26,9 @@ type ShoppingCheckout struct {
 // ShoppingCheckout constructor
 func NewShoppingCheckout() *ShoppingCheckout {
 	return &ShoppingCheckout{
-		Shopping:      make(map[string]int),
-		SKUToPriceMap: make(map[string]int),
+		Shopping:         make(map[string]int),
+		SKUToPriceMap:    make(map[string]int),
+		SKUToDiscountMap: make(map[string]Discount),
 	}
 }
 
@@ -39,6 +50,26 @@ func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) err
 			return fmt.Errorf("item %s's price cannot be negative %d", item, price)
 		}
 		s.SKUToPriceMap[item] = price
+	}
+	return nil
+}
+
+func (s *ShoppingCheckout) SetDiscountPriceMapping(itemDiscountMap map[string]Discount) error {
+	for item, discount := range itemDiscountMap {
+		regularPrice, ok := s.SKUToPriceMap[item]
+		// cannot apply discount on an item that is not in SKUToPriceMap
+		if !ok {
+			return fmt.Errorf("item %s not recognised by shop", item)
+		}
+
+		// discount doesn't make sense if it's more than the price of an item
+		nonDiscountPrice := (regularPrice * discount.NumItems)
+		if discount.Price >= nonDiscountPrice {
+			return fmt.Errorf("item %s's discount price cannot be more than regular price %d >= %d", item, discount.Price, nonDiscountPrice)
+		}
+
+		// store discount mapping
+		s.SKUToDiscountMap[item] = discount
 	}
 	return nil
 }

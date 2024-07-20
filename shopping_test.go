@@ -62,7 +62,7 @@ func TestCheckout(t *testing.T) {
 		}
 	})
 
-	t.Run("scanning items with a disconut correctly applies discounted price", func(t *testing.T) {
+	t.Run("scanning items with a discount correctly applies discounted price", func(t *testing.T) {
 		shoppingCheckout := NewShoppingCheckout()
 		item := "A"
 		price := 50
@@ -73,7 +73,11 @@ func TestCheckout(t *testing.T) {
 		itemDiscountMap := map[string]Discount{item: Discount{NumItems: 2, Price: expectedPrice}}
 
 		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
-		shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+		err := shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
 
 		// Scan "A" twice to get a discount of 80
 		_ = shoppingCheckout.Scan(item) // errors covered by other tests
