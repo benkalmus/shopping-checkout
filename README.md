@@ -40,7 +40,10 @@ It also makes the project easier to change and configure in the future, if for e
 
 See `make help` for usage. 
 
+
 # Build & Run
+
+The requirements do not specify an Input or Output, therefore the solution doesn't provide it. For this reason, running the app doesn't do anything. 
 
 ```sh
 make build
@@ -49,6 +52,8 @@ make run
 
 # Test
 
+Run tests with:
+
 ```sh
 make test
 ```
@@ -56,8 +61,8 @@ make test
 ## TODO & Improvements
 
 - Ability to `Clear` the shopping cart or `Remove` individual items
-- Concurrency safe access, both scan and get total price
-- Currently the app doesn't do anything, read shopping list from file?
+- Concurrency safe access, currently multiple go routines cannot access the same ShoppingCheckout safely. 
+- Currently, the app doesn't produce anything. Perhaps in the future read shopping list from a file?
+    - Input file .e.g csv, SQLite
 
-- Data generator  e.g. in csv format
-- Input data via file e.g. csv. 
+- Data generator, to produce random SKUs with Prices and Discounts and write to file or DB
