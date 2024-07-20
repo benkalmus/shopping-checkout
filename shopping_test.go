@@ -54,10 +54,35 @@ func TestCheckout(t *testing.T) {
 	t.Run("scanning an unrecognised item returns an error", func(t *testing.T) {
 		shoppingCheckout := NewShoppingCheckout()
 		item := "A"
+		// this item should not be scannable, as we haven't set a price for it
 		err := shoppingCheckout.Scan(item)
 
 		if err == nil {
 			t.Fatalf("Expected error returned on unrecognised item")
+		}
+	})
+
+	t.Run("scanning items with a disconut correctly applies discounted price", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		price := 50
+		expectedPrice := 80
+		itemPriceMap := map[string]int{item: price}
+		// must also provide a discounted items map to the shop
+		// define a custom type, Discount
+		itemDiscountMap := map[string]Discount{item: Discount{NumItems: 2, Price: expectedPrice}}
+
+		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
+		shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+
+		// Scan "A" twice to get a discount of 80
+		_ = shoppingCheckout.Scan(item) // errors covered by other tests
+		_ = shoppingCheckout.Scan(item)
+
+		totalPrice, _ := shoppingCheckout.GetTotalPrice()
+
+		if totalPrice != expectedPrice {
+			t.Fatalf("Expected total price %d got %d", expectedPrice, totalPrice)
 		}
 	})
 
