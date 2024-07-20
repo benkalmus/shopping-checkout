@@ -4,6 +4,12 @@ import "fmt"
 
 // Type definitions
 // =======================================================
+
+type ICheckout interface {
+	Scan(SKU string) (err error)
+	GetTotalPrice() (totalPrice int, err error)
+}
+
 type ShoppingCheckout struct {
 	// map that stores string with a count of items scanned
 	Shopping map[string]int

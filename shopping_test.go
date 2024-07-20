@@ -178,7 +178,7 @@ func TestCheckoutWithDiscounts(t *testing.T) {
 	})
 }
 
-func TestCheckoutWithoutDiscount(t *testing.T) {
+func TestTableDrivenCheckoutWithoutDiscount(t *testing.T) {
 	//setup test
 	itemPriceMap := map[string]int{
 		"A": 50,
@@ -269,4 +269,10 @@ func TestTableDrivenCheckoutWithDiscount(t *testing.T) {
 			}
 		})
 	}
+}
+
+// ShoppingCheckout satisifies ICheckout interface
+
+func TestSatisfyInterface(t *testing.T) {
+	var _ ICheckout = NewShoppingCheckout() // will fail to compile if ICheckout is not satisfied
 }

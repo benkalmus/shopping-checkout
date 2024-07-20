@@ -40,14 +40,24 @@ It also makes the project easier to change and configure in the future, if for e
 
 See `make help` for usage. 
 
-# Build
- 
-# Run 
+# Build & Run
+
+```sh
+make build
+make run
+```
 
 # Test
 
-## Improvements
+```sh
+make test
+```
+
+## TODO & Improvements
 
 - Ability to `Clear` the shopping cart or `Remove` individual items
 - Concurrency safe access, both scan and get total price
-- 
+- Currently the app doesn't do anything, read shopping list from file?
+
+- Data generator  e.g. in csv format
+- Input data via file e.g. csv. 
