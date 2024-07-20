@@ -33,10 +33,14 @@ func NewShoppingCheckout() *ShoppingCheckout {
 //		"D": 15
 //	}
 //	s.SetSKUToPriceMapping(itemPrices)
-func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) {
+func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) error {
 	for item, price := range itemPriceMap {
+		if price < 0 {
+			return fmt.Errorf("item %s's price cannot be negative %d", item, price)
+		}
 		s.SKUToPriceMap[item] = price
 	}
+	return nil
 }
 
 // Adds a new item to shopping checkout,
