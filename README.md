@@ -31,11 +31,11 @@ type ICheckout interface {
     GetTotalPrice()(totalPrice int, err error)
 }
 ```
-
+_________
 # Solution
 
-Initialised project with empty .go files, changelog, version and Makefile. 
-The Makefile serves ease of use for the purpose of testing, running and building the application by running a single command, without worrying about arguments and options.
+Initialised project with empty .go files, [changelog](CHANGELOG.md), [version](vsn.mk) and [Makefile](Makefile). 
+The [Makefile](Makefile) serves ease of use for the purpose of testing, running and building the application by running a single command, without worrying about arguments and options.
 It also makes the project easier to change and configure in the future, if for example a DB backend is added running in a Docker container. 
 
 See `make help` for usage. 
@@ -57,6 +57,12 @@ Run tests with:
 ```sh
 make test
 ```
+
+# Development
+
+See `package shopping` in [shopping.go](shopping.go) and [shopping_test.go](shopping_test.go) 
+
+Usage and examples are provided on all public API exposed to `ShoppingCheckout{}`. 
 
 ## TODO & Improvements
 
