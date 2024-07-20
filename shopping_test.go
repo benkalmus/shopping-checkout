@@ -131,6 +131,22 @@ func TestCheckoutWithDiscounts(t *testing.T) {
 			t.Fatalf("Expected error but got nil on invalid discount price")
 		}
 	})
+
+	t.Run("setting a discount returns error if numItems is 0", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		price := 50
+		itemPriceMap := map[string]int{item: price}
+		// provide a DiscountPrice that is higher than regular price * number of items
+		itemDiscountMap := map[string]Discount{item: Discount{NumItems: 0, Price: 20}}
+
+		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
+		err := shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+
+		if err == nil {
+			t.Fatalf("Expected error but got nil on invalid discount numItems")
+		}
+	})
 }
 
 func TestCheckoutWithoutDiscount(t *testing.T) {

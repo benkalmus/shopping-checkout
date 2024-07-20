@@ -72,6 +72,11 @@ func (s *ShoppingCheckout) SetDiscountPriceMapping(itemDiscountMap map[string]Di
 			return fmt.Errorf("item %s not recognised by shop", item)
 		}
 
+		// numItems = 0 will cause a division by zero error in GetTotalPrice
+		if discount.NumItems < 0 {
+			return fmt.Errorf("number of items for discount must be >0")
+		}
+
 		// discount doesn't make sense if it's more than the price of an item
 		nonDiscountPrice := (regularPrice * discount.NumItems)
 		if discount.Price >= nonDiscountPrice || discount.Price < 0 {
