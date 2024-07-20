@@ -46,3 +46,8 @@ See `make help` for usage.
 
 # Test
 
+## Improvements
+
+- Ability to `Clear` the shopping cart or `Remove` individual items
+- Concurrency safe access, both scan and get total price
+- 

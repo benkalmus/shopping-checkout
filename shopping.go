@@ -54,6 +54,16 @@ func (s *ShoppingCheckout) SetSKUToPriceMapping(itemPriceMap map[string]int) err
 	return nil
 }
 
+// Configures SKU to Discount{} mapping for Shopping Checkout
+// Merges item Discount map with existing map in ShoppingCheckout,
+// note this will override SKU collisions
+// Example:
+//
+//	itemDiscounts := map[string]Discount{
+//		"A": {NumItems: 3, Price: 75},
+//		"B": {NumItems: 2, Price: 45},
+//	}
+//	s.SetDiscountPriceMapping(itemDiscounts)
 func (s *ShoppingCheckout) SetDiscountPriceMapping(itemDiscountMap map[string]Discount) error {
 	for item, discount := range itemDiscountMap {
 		regularPrice, ok := s.SKUToPriceMap[item]
@@ -88,6 +98,11 @@ func (s *ShoppingCheckout) Scan(item string) error {
 	return nil
 }
 
+// Returns total price for all scanned items in shopping checkout
+// Example:
+//
+//	totalPrice, _ := s.GetTotalPrice()
+//	> 80
 func (s *ShoppingCheckout) GetTotalPrice() (int, error) {
 	totalPrice := 0
 	for item, count := range s.Shopping {

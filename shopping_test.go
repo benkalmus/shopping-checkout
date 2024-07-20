@@ -32,10 +32,6 @@ func TestCheckout(t *testing.T) {
 			t.Fatalf("Expected total price %d got %d", price, totalPrice)
 		}
 	})
-	//things to test
-	// discount
-	// discount for item not found in SKUPriceMap
-	//
 
 	t.Run("setting a negative price on an item returns error", func(t *testing.T) {
 		shoppingCheckout := NewShoppingCheckout()
@@ -61,7 +57,9 @@ func TestCheckout(t *testing.T) {
 			t.Fatalf("Expected error returned on unrecognised item")
 		}
 	})
+}
 
+func TestCheckoutWithDiscounts(t *testing.T) {
 	t.Run("scanning items with a discount correctly applies discounted price", func(t *testing.T) {
 		shoppingCheckout := NewShoppingCheckout()
 		item := "A"
@@ -90,6 +88,33 @@ func TestCheckout(t *testing.T) {
 		}
 	})
 
+	t.Run("setting an invalid discount returns error", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		price := 50
+		itemPriceMap := map[string]int{item: price}
+		// provide a DiscountPrice that is higher than regular price * number of items
+		itemDiscountMap := map[string]Discount{item: Discount{NumItems: 2, Price: 200}}
+
+		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
+		err := shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+
+		if err == nil {
+			t.Fatalf("Expected error but got nil on invalid discount price")
+		}
+	})
+
+	t.Run("cannot discount an item that doesn't exist in SKU mapping", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		itemDiscountMap := map[string]Discount{item: Discount{NumItems: 2, Price: 20}}
+
+		err := shoppingCheckout.SetDiscountPriceMapping(itemDiscountMap)
+
+		if err == nil {
+			t.Fatalf("Expected error but got nil on invalid discount price")
+		}
+	})
 }
 
 func TestCheckoutWithoutDiscount(t *testing.T) {
