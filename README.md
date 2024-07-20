@@ -72,3 +72,5 @@ Usage and examples are provided on all public API exposed to `ShoppingCheckout{}
     - Input file .e.g csv, SQLite
 
 - Data generator, to produce random SKUs with Prices and Discounts and write to file or DB
+
+- Add custom types for SKU and Price (money should be handled by a well designed dep)
