@@ -184,9 +184,60 @@ func TestCheckoutWithoutDiscount(t *testing.T) {
 				t.Fatalf("Unexpected error getting total price: %v", err)
 			}
 			if gotTotal != testData.total {
-				t.Fatalf("got %q, want %q", gotTotal, testData.total)
+				t.Fatalf("got %d, want %d", gotTotal, testData.total)
 			}
 		})
 	}
+}
 
+func TestTableDrivenCheckoutWithDiscount(t *testing.T) {
+	//setup test
+	itemPriceMap := map[string]int{
+		"A": 50,
+		"B": 30,
+		"C": 20,
+		"D": 15,
+	}
+
+	itemDiscountMap := map[string]Discount{
+		"A": {3, 130},
+		"B": {2, 45},
+	}
+	cases := []struct {
+		items []string
+		total int
+	}{
+		{[]string{"A", "B"}, 80},
+		{[]string{"A", "A"}, 100},
+		{[]string{"A", "B", "C", "D"}, 115},
+		{[]string{"A", "C", "A", "A"}, 150},
+		{[]string{"A", "B", "B"}, 95},
+		{[]string{"B", "A", "B"}, 95},            // prove order doesn't matter
+		{[]string{"A", "B", "A", "B", "A"}, 175}, // prove order doesn't matter
+		{[]string{"A", "A", "A", "A"}, 180},      // discounts calculated properly even for non-multiple discounts
+		{[]string{"A", "A", "A", "A", "A"}, 230},
+		{[]string{"A", "A", "A", "A", "A", "A"}, 260}, // discounts work for multiple discount.NumItems
+	}
+
+	for _, testData := range cases {
+		t.Run(fmt.Sprintf("%v returns total price %d", testData.items, testData.total), func(t *testing.T) {
+			shopping := NewShoppingCheckout()
+			shopping.SetSKUToPriceMapping(itemPriceMap)
+			shopping.SetDiscountPriceMapping(itemDiscountMap)
+
+			for _, item := range testData.items {
+				err := shopping.Scan(item)
+				if err != nil {
+					t.Fatalf("Unexpected error scanning item: %v", err)
+				}
+			}
+			gotTotal, err := shopping.GetTotalPrice()
+			if err != nil {
+				t.Fatalf("Unexpected error getting total price: %v", err)
+			}
+			if gotTotal != testData.total {
+				t.Fatalf("got %d, want %d", gotTotal, testData.total)
+			}
+		})
+	}
 }
