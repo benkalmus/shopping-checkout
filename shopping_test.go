@@ -57,6 +57,35 @@ func TestCheckout(t *testing.T) {
 			t.Fatalf("Expected error returned on unrecognised item")
 		}
 	})
+
+	t.Run("can change pricing model without rescanning all items", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		originalPrice := 50
+		newPrice := 60
+		// shopping checkout requires a map of string to prices, this will be required to calculate price
+		itemPriceMap := map[string]int{item: originalPrice}
+		updatedItemPriceMap := map[string]int{item: newPrice}
+
+		shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
+		shoppingCheckout.Scan(item)
+
+		// check price before changing pricing model
+		totalPrice, _ := shoppingCheckout.GetTotalPrice()
+
+		if totalPrice != originalPrice {
+			t.Fatalf("Expected total price %d got %d", originalPrice, totalPrice)
+		}
+
+		// update Pricing model
+		shoppingCheckout.SetSKUToPriceMapping(updatedItemPriceMap)
+		// check price after changing model
+		totalPrice, _ = shoppingCheckout.GetTotalPrice()
+
+		if totalPrice != newPrice {
+			t.Fatalf("Expected total price %d got %d", newPrice, totalPrice)
+		}
+	})
 }
 
 func TestCheckoutWithDiscounts(t *testing.T) {
