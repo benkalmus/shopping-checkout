@@ -91,25 +91,31 @@ func (s *ShoppingCheckout) Scan(item string) error {
 func (s *ShoppingCheckout) GetTotalPrice() (int, error) {
 	totalPrice := 0
 	for item, count := range s.Shopping {
-		price := s.SKUToPriceMap[item] //no need to check if item exists, already checked in Scan/1
-
-		discount, ok := s.SKUToDiscountMap[item]
-		if ok {
-			// apply discount on multiples of discount.NumItems
-			discountPrice := discount.Price * (count / discount.NumItems)
-			// use regular price on the remainder of items that don't fit into discount.NumItems
-			remainderPrice := price * (count % discount.NumItems)
-
-			// shopper savings = (price * count) - (discountPrice + remainderPrice)
-			totalPrice += discountPrice + remainderPrice
-
-			continue
-		}
-
-		totalPrice += price * count
+		totalPrice += s.calculatePrice(item, count)
 	}
 	return totalPrice, nil
 }
 
 // ShoppingCheckout Private Func
 // =======================================================
+
+func (s *ShoppingCheckout) calculatePrice(item string, count int) int {
+	price := s.SKUToPriceMap[item] //no need to check if item exists, already checked in Scan/1
+
+	discount, ok := s.SKUToDiscountMap[item]
+
+	// if discount not found for item, return regular price
+	if !ok {
+		return price * count
+	}
+
+	// apply discount on multiples of discount.NumItems
+
+	discountPrice := discount.Price * (count / discount.NumItems)
+	// use regular price on the remainder of items that don't fit into discount.NumItems
+	remainderPrice := price * (count % discount.NumItems)
+
+	// shopper savings = (price * count) - (discountPrice + remainderPrice)
+	return discountPrice + remainderPrice
+
+}
