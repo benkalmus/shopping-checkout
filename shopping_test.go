@@ -32,6 +32,27 @@ func TestCheckout(t *testing.T) {
 			t.Fatalf("Expected total price %d got %d", price, totalPrice)
 		}
 	})
+	//things to test
+	// negative item prices
+	// unknown item
+	// discount
+	// discount for item not found in SKUPriceMap
+	//
+
+	t.Run("setting a negative price on an item returns error", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		price := -50
+		itemPriceMap := map[string]int{item: price}
+
+		err := shoppingCheckout.SetSKUToPriceMapping(itemPriceMap)
+
+		if err == nil {
+			t.Fatalf("Expected error returned on negative price")
+		}
+
+	})
+
 }
 
 func TestCheckoutWithoutDiscount(t *testing.T) {
