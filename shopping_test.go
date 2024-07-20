@@ -33,8 +33,6 @@ func TestCheckout(t *testing.T) {
 		}
 	})
 	//things to test
-	// negative item prices
-	// unknown item
 	// discount
 	// discount for item not found in SKUPriceMap
 	//
@@ -51,6 +49,16 @@ func TestCheckout(t *testing.T) {
 			t.Fatalf("Expected error returned on negative price")
 		}
 
+	})
+
+	t.Run("scanning an unrecognised item returns an error", func(t *testing.T) {
+		shoppingCheckout := NewShoppingCheckout()
+		item := "A"
+		err := shoppingCheckout.Scan(item)
+
+		if err == nil {
+			t.Fatalf("Expected error returned on unrecognised item")
+		}
 	})
 
 }
