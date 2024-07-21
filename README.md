@@ -66,6 +66,7 @@ Usage and examples are provided on all public API exposed to `ShoppingCheckout{}
 
 ## TODO & Improvements
 
+- Logging, setup a logger
 - Ability to `Clear` the shopping cart or `Remove` individual items
 - Concurrency safe access, currently multiple go routines cannot access the same ShoppingCheckout safely. 
 - Currently, the app doesn't produce anything. Perhaps in the future read shopping list from a file?
